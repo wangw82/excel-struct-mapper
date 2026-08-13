@@ -5,7 +5,7 @@
 Install the latest tagged release:
 
 ```text
-go get github.com/wangw82/excel-struct-mapper@v0.1.0
+go get github.com/wangw82/excel-struct-mapper@v0.1.1
 ```
 
 Import the core as `github.com/wangw82/excel-struct-mapper` and the XLSX adapter as `github.com/wangw82/excel-struct-mapper/xlsx`.

@@ -2,7 +2,7 @@
 
 ## Can I install it now?
 
-Yes. Install the latest tagged release with `go get github.com/wangw82/excel-struct-mapper@v0.1.0`. The API is pre-1.0 and may still change.
+Yes. Install the latest tagged release with `go get github.com/wangw82/excel-struct-mapper@v0.1.1`. The API is pre-1.0 and may still change.
 
 ## Are the examples current?
 
