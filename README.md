@@ -36,17 +36,17 @@ The API is pre-1.0 and may change before the first stable release.
 
 ```go
 type Person struct {
-	ID   int    `excel:"header=ID;required=true"`
-	Name string `excel:"header=Name;required=true"`
+    ID   int    `excel:"header=ID;required=true"`
+    Name string `excel:"header=Name;required=true"`
 }
 
 type Workbook struct {
-	People []Person `excel:"key=people;workflow=all;format=slice"`
+    People []Person `excel:"key=people;workflow=all;format=slice"`
 }
 
 plan, err := mapper.Compile[Workbook]()
 if err != nil {
-	return err
+    return err
 }
 
 sheet := mapper.NewSheet("People", [][]string{
@@ -55,7 +55,7 @@ sheet := mapper.NewSheet("People", [][]string{
 })
 var workbook Workbook
 if err := plan.Decode(context.Background(), sheet, &workbook); err != nil {
-	return err
+    return err
 }
 ```
 
@@ -75,7 +75,7 @@ Runnable examples for layouts, recursive groups, extensions, validation, and XLS
 
 ## Requirements
 
-- Go 1.21 or later.
+- Go 1.25 or later.
 - XLSX support requires `github.com/xuri/excelize/v2` through the `xlsx` package.
 
 ## Contributing
