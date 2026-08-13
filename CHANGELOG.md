@@ -2,9 +2,11 @@
 
 All notable changes to this project are documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project intends to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) after the first public release.
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.1.0] - 2026-08-13
 
 ### Added
 
@@ -19,3 +21,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Unit, integration, round-trip, race, fuzz, and boundary tests.
 - Runnable examples, bilingual project overview, and public maintainer documentation.
 - Cross-platform CI, coverage enforcement, CodeQL, dependency review, and sensitive-content scanning.
+
+[Unreleased]: https://github.com/wangw82/excel-struct-mapper/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/wangw82/excel-struct-mapper/releases/tag/v0.1.0

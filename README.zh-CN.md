@@ -36,17 +36,17 @@ Excel Struct Mapper 是一个 Go 语言库，用于将电子表格行映射为�
 
 ```go
 type Person struct {
-	ID   int    `excel:"header=ID;required=true"`
-	Name string `excel:"header=Name;required=true"`
+    ID   int    `excel:"header=ID;required=true"`
+    Name string `excel:"header=Name;required=true"`
 }
 
 type Workbook struct {
-	People []Person `excel:"key=people;workflow=all;format=slice"`
+    People []Person `excel:"key=people;workflow=all;format=slice"`
 }
 
 plan, err := mapper.Compile[Workbook]()
 if err != nil {
-	return err
+    return err
 }
 
 sheet := mapper.NewSheet("People", [][]string{
@@ -55,7 +55,7 @@ sheet := mapper.NewSheet("People", [][]string{
 })
 var workbook Workbook
 if err := plan.Decode(context.Background(), sheet, &workbook); err != nil {
-	return err
+    return err
 }
 ```
 

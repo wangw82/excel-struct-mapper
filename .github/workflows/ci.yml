@@ -92,7 +92,10 @@ jobs:
         shell: pwsh
         run: |
           $summary = go tool cover -func=coverage.out | Select-Object -Last 1
-          $percent = [double]([regex]::Match($summary, '[0-9.]+(?=%)').Value)
+          $percent = [double]::Parse(
+            [regex]::Match($summary, '[0-9.]+(?=%)').Value,
+            [Globalization.CultureInfo]::InvariantCulture
+          )
           Write-Host $summary
           if ($percent -lt 80) {
             throw "Coverage $percent% is below 80%"
