@@ -11,7 +11,7 @@ Thank you for contributing to Excel Struct Mapper. The project welcomes defect r
 
 ## Development
 
-Use Go 1.21 or later. Run the required local checks before requesting review:
+Use Go 1.25 or later. Run the required local checks before requesting review:
 
 ```text
 gofmt -w .
