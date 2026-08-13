@@ -91,7 +91,7 @@ jobs:
       - name: Enforce coverage threshold
         shell: pwsh
         run: |
-          $summary = go tool cover -func=coverage.out | Select-Object -Last 1
+          $summary = go tool cover "-func=coverage.out" | Select-Object -Last 1
           $percent = [double]::Parse(
             [regex]::Match($summary, '[0-9.]+(?=%)').Value,
             [Globalization.CultureInfo]::InvariantCulture
