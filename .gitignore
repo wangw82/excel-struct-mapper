@@ -1,0 +1,11 @@
+.idea/
+.vscode/
+*.swp
+*.tmp
+*.log
+.DS_Store
+Thumbs.db
+coverage/
+coverage.out
+dist/
+build/

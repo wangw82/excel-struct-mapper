@@ -1,0 +1,115 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Go ${{ matrix.go }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+        go:
+          - "1.21.x"
+          - stable
+        exclude:
+          - os: windows-latest
+            go: "1.21.x"
+          - os: macos-latest
+            go: "1.21.x"
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go }}
+          cache: true
+
+      - name: Check formatting
+        shell: pwsh
+        run: |
+          $files = gofmt -l .
+          if ($files) {
+            $files
+            throw "Go files are not formatted"
+          }
+
+      - name: Run tests
+        run: go test -race ./...
+
+      - name: Run static analysis
+        run: go vet ./...
+
+      - name: Run examples
+        shell: pwsh
+        run: |
+          Get-ChildItem examples -Directory | Sort-Object Name | ForEach-Object {
+            go run "./examples/$($_.Name)"
+            if ($LASTEXITCODE -ne 0) {
+              throw "Example $($_.Name) failed"
+            }
+          }
+
+  coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Generate coverage
+        run: go test -covermode=atomic -coverprofile=coverage.out ./...
+
+      - name: Enforce coverage threshold
+        shell: pwsh
+        run: |
+          $summary = go tool cover -func=coverage.out | Select-Object -Last 1
+          $percent = [double]([regex]::Match($summary, '[0-9.]+(?=%)').Value)
+          Write-Host $summary
+          if ($percent -lt 80) {
+            throw "Coverage $percent% is below 80%"
+          }
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage.out
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload coverage to Codecov
+        if: ${{ !github.event.pull_request.head.repo.fork }}
+        uses: codecov/codecov-action@v5
+        with:
+          files: coverage.out
+          fail_ci_if_error: false
+          use_oidc: true

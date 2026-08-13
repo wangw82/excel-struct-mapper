@@ -1,0 +1,82 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+-*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Validate release
+        shell: pwsh
+        run: |
+          go test -race ./...
+          if ($LASTEXITCODE -ne 0) { throw "Tests failed" }
+          go vet ./...
+          if ($LASTEXITCODE -ne 0) { throw "Static analysis failed" }
+          Get-ChildItem examples -Directory | Sort-Object Name | ForEach-Object {
+            go run "./examples/$($_.Name)"
+            if ($LASTEXITCODE -ne 0) {
+              throw "Example $($_.Name) failed"
+            }
+          }
+
+      - name: Validate tag and module
+        if: github.ref_type == 'tag'
+        shell: pwsh
+        run: |
+          $version = "${{ github.ref_name }}"
+          if ($version -notmatch '^v[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$') {
+            throw "Tag $version is not a semantic version"
+          }
+          go list -m
+
+  publish:
+    if: github.ref_type == 'tag'
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Create source archives
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path dist
+          $prefix = "excel-struct-mapper-${{ github.ref_name }}"
+          git archive --format=zip --prefix="$prefix/" --output="dist/$prefix.zip" HEAD
+          git archive --format=tar.gz --prefix="$prefix/" --output="dist/$prefix.tar.gz" HEAD
+          Get-FileHash dist/* -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  $([IO.Path]::GetFileName($_.Path))" } | Set-Content dist/checksums.txt
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: CHANGELOG.md
+          files: |
+            dist/*.zip
+            dist/*.tar.gz
+            dist/checksums.txt
+          generate_release_notes: true
+          prerelease: ${{ contains(github.ref_name, '-') }}
