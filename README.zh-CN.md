@@ -75,7 +75,7 @@ if err := plan.Decode(context.Background(), sheet, &workbook); err != nil {
 
 ## 环境要求
 
-- Go 1.21 或更高版本。
+- Go 1.25 或更高版本。
 - `xlsx` 包通过 `github.com/xuri/excelize/v2` 提供 XLSX 支持。
 
 ## 参与贡献

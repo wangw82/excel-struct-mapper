@@ -27,13 +27,13 @@ jobs:
           - windows-latest
           - macos-latest
         go:
-          - "1.21.x"
+          - "1.25.x"
           - stable
         exclude:
           - os: windows-latest
-            go: "1.21.x"
+            go: "1.25.x"
           - os: macos-latest
-            go: "1.21.x"
+            go: "1.25.x"
     steps:
       - name: Check out repository
         uses: actions/checkout@v4

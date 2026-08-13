@@ -75,7 +75,7 @@ Runnable examples for layouts, recursive groups, extensions, validation, and XLS
 
 ## Requirements
 
-- Go 1.21 or later.
+- Go 1.25 or later.
 - XLSX support requires `github.com/xuri/excelize/v2` through the `xlsx` package.
 
 ## Contributing
