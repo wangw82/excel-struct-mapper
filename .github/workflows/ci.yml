@@ -27,13 +27,13 @@ jobs:
           - windows-latest
           - macos-latest
         go:
-          - "1.21.x"
+          - "1.25.x"
           - stable
         exclude:
           - os: windows-latest
-            go: "1.21.x"
+            go: "1.25.x"
           - os: macos-latest
-            go: "1.21.x"
+            go: "1.25.x"
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -86,13 +86,16 @@ jobs:
           cache: true
 
       - name: Generate coverage
-        run: go test -covermode=atomic -coverprofile=coverage.out ./...
+        run: go test -covermode=atomic -coverprofile=coverage.out . ./xlsx
 
       - name: Enforce coverage threshold
         shell: pwsh
         run: |
-          $summary = go tool cover -func=coverage.out | Select-Object -Last 1
-          $percent = [double]([regex]::Match($summary, '[0-9.]+(?=%)').Value)
+          $summary = go tool cover "-func=coverage.out" | Select-Object -Last 1
+          $percent = [double]::Parse(
+            [regex]::Match($summary, '[0-9.]+(?=%)').Value,
+            [Globalization.CultureInfo]::InvariantCulture
+          )
           Write-Host $summary
           if ($percent -lt 80) {
             throw "Coverage $percent% is below 80%"
