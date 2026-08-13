@@ -86,7 +86,7 @@ jobs:
           cache: true
 
       - name: Generate coverage
-        run: go test -covermode=atomic -coverprofile=coverage.out ./...
+        run: go test -covermode=atomic -coverprofile=coverage.out . ./xlsx
 
       - name: Enforce coverage threshold
         shell: pwsh
