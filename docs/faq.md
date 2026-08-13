@@ -2,11 +2,11 @@
 
 ## Can I install it now?
 
-Yes. Until the first tagged release, install the main branch with `go get github.com/wangw82/excel-struct-mapper@main`. The API is pre-1.0 and may still change.
+Yes. Install the latest tagged release with `go get github.com/wangw82/excel-struct-mapper@v0.1.0`. The API is pre-1.0 and may still change.
 
 ## Are the examples current?
 
-The README, getting-started guide, and `examples` directory track the current source. The API may still change before the first tag, with notable changes recorded in the changelog.
+The README, getting-started guide, and `examples` directory track the current source. The API may change between pre-1.0 releases, with notable changes recorded in the changelog.
 
 ## Which spreadsheet formats are supported?
 
