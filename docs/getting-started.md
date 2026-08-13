@@ -2,10 +2,10 @@
 
 ## Installation
 
-Until the first tagged release, install the current main branch explicitly:
+Install the latest tagged release:
 
 ```text
-go get github.com/wangw82/excel-struct-mapper@main
+go get github.com/wangw82/excel-struct-mapper@v0.1.0
 ```
 
 Import the core as `github.com/wangw82/excel-struct-mapper` and the XLSX adapter as `github.com/wangw82/excel-struct-mapper/xlsx`.
